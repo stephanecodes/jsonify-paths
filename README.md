@@ -1,6 +1,4 @@
-# jsonify-paths
-
-[![Build Status](https://travis-ci.org/stephanecodes/jsonify-paths.svg?branch=master)](https://travis-ci.org/stephanecodes/jsonify-paths)
+# jsonify-paths [![Build Status](https://travis-ci.org/stephanecodes/jsonify-paths.svg?branch=master)](https://travis-ci.org/stephanecodes/jsonify-paths)
 
 Convert strings representing paths or objects with a path and optional value to a JSON object.
 
