@@ -1,42 +1,3 @@
-/*
-
-fromString('a/b/c/')
-fromString('a/b/c')
-fromString('/a/b/c/')
-fromString('/a/b/c')
-
-returns
-
-{
-	"a": {
-		"b": {
-			"c": {}
-		}
-	}
-}
-
-fromArray([
-	'a/b/c/',
-	'a/b/d',
-	'a/b/d/e/f',
-	'g'
-]
-returns
-{
-	"a": {
-		"b": {
-			"c": {},
-			"d": {
-				"e": {
-					"f": {}
-				}
-			}
-		}
-	},
-	"g": {}
-}
-
-*/
 
 const defaults = {
 	options: {
@@ -50,21 +11,20 @@ const escapeRegExp = text => {
 	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 
-const populate = (value, delimiter, jsonObject) => {
+const populate = (string, options, jsonObject) => {
 	jsonObject = jsonObject || {};
 
-	const i = value.indexOf(delimiter);
+	const i = string.indexOf(options.delimiter);
 	if (i > 0) {
-		const key = value.substring(0, i);
-		value = value.substring(i + delimiter.length);
+		const key = string.substring(0, i);
+		string = string.substring(i + options.delimiter.length);
 		if (Object.prototype.hasOwnProperty.call(jsonObject, key)) {
-			populate(value, delimiter, jsonObject[key]);
+			populate(string, options, jsonObject[key]);
 		} else {
-			jsonObject[key] = populate(value, delimiter);
+			jsonObject[key] = populate(string, options);
 		}
 	} else {
-		const key = value;
-		jsonObject[key] = {};
+		jsonObject[string] = {};
 	}
 
 	return jsonObject;
@@ -72,7 +32,7 @@ const populate = (value, delimiter, jsonObject) => {
 
 const fromStrings = (strings, options) => {
 	if (Array.isArray(strings) === false) {
-		throw new TypeError('I want a strings array!');
+		throw new TypeError('I want an array of strings!');
 	}
 	options = Object.assign({}, defaults.options, options);
 
@@ -96,13 +56,12 @@ const fromStrings = (strings, options) => {
 				.replace(spacesBeforeAndAfterDelimitersRegExp, delimiter)
 				// ignore consecutive delimiters,
 				// => `///` or `//` becomes `/`
-				// => `:::` or `::` becomes `:`
 				.replace(consecutiveDelimitersRegExp, delimiter)
 				// Remove leading and trailing spaces
 				.replace(leadingAndTrailingDelimitersRegExp, '');
 
 			// Populate JSON object from path
-			populate(string, delimiter, jsonObject);
+			populate(string, options, jsonObject);
 		}
 	});
 

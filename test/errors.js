@@ -18,7 +18,7 @@ test('throws for invalid string value', t => {
 test('throws for invalid string array', t => {
 	t.throws(() => {
 		jsonifyPaths.fromStrings();
-	}, 'I want a strings array!');
+	}, 'I want an array of strings!');
 
 	t.throws(() => {
 		jsonifyPaths.fromStrings(null);
