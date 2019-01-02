@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/stephanecodes/jsonify-paths.svg?branch=master)](https://travis-ci.org/stephanecodes/jsonify-paths)
 
-Convert strings representing paths to a JSON object
+Convert strings representing paths or objects with a path and optional value to a JSON object.
 
 ## Usage
 
@@ -13,7 +13,7 @@ const jsonifyPaths = require('jsonify-paths');
 ### From a string
 
 ```js
-jsonifyPaths.fromString('a/bb/ccc');
+jsonifyPaths.from('a/bb/ccc');
 // =>
 {
 	"a": {
@@ -27,7 +27,7 @@ jsonifyPaths.fromString('a/bb/ccc');
 ### From an array of strings
 
 ```js
-jsonifyPaths.fromStrings([
+jsonifyPaths.from([
 	'I am/not/a number',
 	'I am/a/free man!'
 ]);
@@ -44,19 +44,94 @@ jsonifyPaths.fromStrings([
 }
 ```
 
-
-### Use custom delimiters
+### From an object
 
 ```js
-jsonifyPaths.fromString('a>bb>ccc', {delimiter: '>'});
-jsonifyPaths.fromString('a|bb|ccc', {delimiter: '|'});
-jsonifyPaths.fromString('a»-»bb»-»ccc', {delimiter: '»-»');
+jsonifyPaths.from({path: 'a/bb/ccc'});
+// =>
+{
+	"a": {
+		"bb": {
+			"ccc": {}
+		}
+	}
+}
 ```
 
-### Ignore spaces around delimiters
+Providing value
+```
+jsonifyPaths.from({path: 'a/bb/ccc', value: 'foo'});
+// =>
+{
+	"a": {
+		"bb": {
+			"ccc": "foo"
+		}
+	}
+}
+```
+
+
+### From an array of objects
 
 ```js
-jsonifyPaths.fromString('Lyon ✈ Reykjavik ✈ Vienna', {delimiter: '✈'});
+jsonifyPaths.from([
+	{path: 'a/bb/ccc'},
+	{path: 'a/bb/d'},
+	{path: 'e'},
+]);
+// =>
+{
+	"a": {
+		"bb": {
+			"ccc": {},
+			"d": {}
+		}
+	},
+	"e": {}
+}
+```
+Providing values (optional)
+
+```js
+jsonifyPaths.from([
+	{path: 'a/bb/ccc', value: "foo"},
+	{path: 'a/bb/d'},
+	{path: 'e', value: false},
+	{path: 'f/g', value: ""}
+	{path: 'f/h', value: 123}
+]);
+// =>
+{
+	"a": {
+		"bb": {
+			"ccc": "foo",
+			"d": {} // => default value
+		}
+	},
+	"e": false,
+	"f": {
+		"g": "",
+		"h": 123
+	}
+}
+```
+
+
+## Options
+
+### Use custom delimiters (default: `slash`)
+
+```js
+jsonifyPaths.from('a>bb>ccc', {delimiter: '>'});
+jsonifyPaths.from('a|bb|ccc', {delimiter: '|'});
+jsonifyPaths.from('a»-»bb»-»ccc', {delimiter: '»-»');
+```
+
+### Ignore spaces around delimiters (default: `true`)
+
+```js
+jsonifyPaths.from('Lyon ✈ Reykjavik ✈ Vienna', {delimiter: '✈'});
 // =>
 {
 	"Lyon": {
@@ -67,15 +142,15 @@ jsonifyPaths.fromString('Lyon ✈ Reykjavik ✈ Vienna', {delimiter: '✈'});
 }
 ```
 
-### Ignore consecutive, leading and trailing delimiters
+### Ignore consecutive, leading and trailing delimiters (default: `true`)
 
 ```js
-jsonifyPaths.fromString('a/b/c');
-jsonifyPaths.fromString('/a/b/c');
-jsonifyPaths.fromString('/a/b/c/');
-jsonifyPaths.fromString('//a/b//c');
-jsonifyPaths.fromString('/a /  b/ c  /');
-jsonifyPaths.fromString('/ a //b / c///');
+jsonifyPaths.from('a/b/c');
+jsonifyPaths.from('/a/b/c');
+jsonifyPaths.from('/a/b/c/');
+jsonifyPaths.from('//a/b//c');
+jsonifyPaths.from('/a /  b/ c  /');
+jsonifyPaths.from('/ a //b / c///');
 // =>
 {
 	"a": {
@@ -85,3 +160,25 @@ jsonifyPaths.fromString('/ a //b / c///');
 	}
 }
 ```
+
+### Change default value (default: `{}`)
+```js
+jsonifyPaths.from([
+	{path: 'France ✈ Germany ✈ Italy'},
+	{path: 'France ✈ Germany ✈ Berlin', value: "Town"},
+	{path: 'Bangkok ✈ Tokyo', value: "Town"},
+], {delimiter: '✈', defaultValue: 'Country'});
+// =>
+{
+	"France": {
+		"Germany": {
+			"Italy": "Country", // => default value
+			"Berlin": 'Town'
+		}
+	},
+	"Bangkok": {
+		"Tokyo": 'Town'
+	}
+};
+```
+
