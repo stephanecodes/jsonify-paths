@@ -21,6 +21,14 @@ const multiLevelsResult = {
 	}
 };
 
+const wordsResult = {
+	"I am": {
+		"not": {
+			"a number": {}
+		}
+	}
+};
+
 test('empty string returns an empty object', t => {
 	const res = jsonifyPaths.fromString('');
 
@@ -52,31 +60,31 @@ test('use custom delimiter', t => {
 });
 
 test('use 2 character custom delimiter', t => {
-	const res = jsonifyPaths.fromString('a::b', {delimiter: '::'});
+	const res = jsonifyPaths.fromString('a>b', {delimiter: '>'});
 
 	t.deepEqual(res, twoLevelsResult);
 });
 
 test('use multi character custom delimiter', t => {
-	const res = jsonifyPaths.fromString('a(0_0)b', {delimiter: '\\(0_0\\)'});
+	const res = jsonifyPaths.fromString('a=>b', {delimiter: '=>'});
 
 	t.deepEqual(res, twoLevelsResult);
 });
 
 test('use utf-8 character custom delimiter', t => {
-	const res = jsonifyPaths.fromString('a☂b', {delimiter: '☂'});
+	const res = jsonifyPaths.fromString('a»b', {delimiter: '»'});
 
 	t.deepEqual(res, twoLevelsResult);
 });
 
 test('use utf-8 character custom delimiter (from unicode value)', t => {
-	const res = jsonifyPaths.fromString('a☂b', {delimiter: String.fromCharCode(0x2602)});
+	const res = jsonifyPaths.fromString('a✈b', {delimiter: String.fromCharCode(0x2708)});
 
 	t.deepEqual(res, twoLevelsResult);
 });
 
 test('use utf-8 multi character custom delimiter', t => {
-	const res = jsonifyPaths.fromString('a☁☂b', {delimiter: '☁☂'});
+	const res = jsonifyPaths.fromString('a»-»b', {delimiter: '»-»'});
 
 	t.deepEqual(res, twoLevelsResult);
 });
@@ -100,7 +108,7 @@ test('ignore leading and trailing delimiter', t => {
 });
 
 test('ignore leading and trailing delimiter (custom delimiter)', t => {
-	const res = jsonifyPaths.fromString(':a:b:', {delimiter: ':'});
+	const res = jsonifyPaths.fromString('>a>b>', {delimiter: '>'});
 
 	t.deepEqual(res, twoLevelsResult);
 });
@@ -112,8 +120,20 @@ test('ignore consecutive delimiters', t => {
 });
 
 test('ignore consecutive delimiters (custom delimiter)', t => {
-	const res = jsonifyPaths.fromString('a:::b', {delimiter: ':'});
+	const res = jsonifyPaths.fromString('a>>>b', {delimiter: '>'});
 
 	t.deepEqual(res, twoLevelsResult);
+});
+
+test('use words', t => {
+	const res = jsonifyPaths.fromString('I am/not/a number');
+
+	t.deepEqual(res, wordsResult);
+});
+
+test('use words (custom delimiter)', t => {
+	const res = jsonifyPaths.fromString('I am|not|a number', {delimiter: '|'});
+
+	t.deepEqual(res, wordsResult);
 });
 
