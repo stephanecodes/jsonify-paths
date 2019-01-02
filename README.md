@@ -57,7 +57,8 @@ jsonifyPaths.from({path: 'a/bb/ccc'});
 ```
 
 Providing value
-```
+
+```js
 jsonifyPaths.from({path: 'a/bb/ccc', value: 'foo'});
 // =>
 {
@@ -126,20 +127,6 @@ jsonifyPaths.from('a|bb|ccc', {delimiter: '|'});
 jsonifyPaths.from('a»-»bb»-»ccc', {delimiter: '»-»');
 ```
 
-### Ignore spaces around delimiters (default: `true`)
-
-```js
-jsonifyPaths.from('Lyon ✈ Reykjavik ✈ Vienna', {delimiter: '✈'});
-// =>
-{
-	"Lyon": {
-		"Reykjavik": {
-			"Vienna": {}
-		}
-	}
-}
-```
-
 ### Ignore consecutive, leading and trailing delimiters (default: `true`)
 
 ```js
@@ -159,23 +146,37 @@ jsonifyPaths.from('/ a //b / c///');
 }
 ```
 
+### Ignore spaces around delimiters (default: `true`)
+
+```js
+jsonifyPaths.from({path: 'Lyon ✈ Reykjavik ✈ Vienna', value:"On Time"}, {delimiter: '✈'});
+// =>
+{
+	"Lyon": {
+		"Reykjavik": {
+			"Vienna": "On Time"
+		}
+	}
+}
+```
+
 ### Change default value (default: `{}`)
 ```js
 jsonifyPaths.from([
-	{path: 'France ✈ Germany ✈ Italy'},
-	{path: 'France ✈ Germany ✈ Berlin', value: "Town"},
-	{path: 'Bangkok ✈ Tokyo', value: "Town"},
-], {delimiter: '✈', defaultValue: 'Country'});
+	{path: 'Lyon ✈ Berlin ✈ Rome'},
+	{path: 'Lyon ✈ Berlin ✈ Geneva', value: "On Time"},
+	{path: 'Bangkok ✈ Tokyo', value: "Delayed"},
+], {delimiter: '✈', defaultValue: 'Scheduled'});
 // =>
 {
-	"France": {
-		"Germany": {
-			"Italy": "Country", // => default value
-			"Berlin": 'Town'
+	"Lyon": {
+		"Berlin": {
+			"Rome": "Scheduled", // => default value
+			"Geneva": 'On Time'
 		}
 	},
 	"Bangkok": {
-		"Tokyo": 'Town'
+		"Tokyo": 'Delayed'
 	}
 };
 ```
