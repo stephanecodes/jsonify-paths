@@ -1,6 +1,6 @@
 {
   "name": "jsonify-paths",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert strings representing paths or objects with a path and optional value to a JSON object.",
   "main": "index.js",
   "scripts": {
