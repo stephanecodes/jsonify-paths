@@ -36,24 +36,24 @@ const multiLevelsResult = {
 };
 
 const wordsResult = {
-	"I am": {
-		"not": {
-			"a number": {}
+	'I am': {
+		not: {
+			'a number': {}
 		},
-		"a": {
-			"free man!": {}
+		a: {
+			'free man!': {}
 		}
 	}
 };
 
 test('empty strings returns an empty object', t => {
-	const res = jsonifyPaths.fromStrings(['', '']);
+	const res = jsonifyPaths.from(['', '']);
 
 	t.deepEqual(res, {});
 });
 
 test('one level', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'a',
 		'b'
 	]);
@@ -62,7 +62,7 @@ test('one level', t => {
 });
 
 test('two levels', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'a/b',
 		'c/d',
 		'c/e'
@@ -72,7 +72,7 @@ test('two levels', t => {
 });
 
 test('multi levels', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'a/b/c/d',
 		'a/e/f/g',
 		'a/e/f/h',
@@ -86,7 +86,7 @@ test('multi levels', t => {
 });
 
 test('use custom delimiter', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'a>b',
 		'c>d',
 		'c>e'
@@ -96,7 +96,7 @@ test('use custom delimiter', t => {
 });
 
 test('use utf-8 character custom delimiter', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'a✈b',
 		'c✈d',
 		'c✈e'
@@ -106,7 +106,7 @@ test('use utf-8 character custom delimiter', t => {
 });
 
 test('ignore leading delimiter (custom delimiter)', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'>a>b',
 		'c>d',
 		'>c>e'
@@ -116,7 +116,7 @@ test('ignore leading delimiter (custom delimiter)', t => {
 });
 
 test('ignore trailing delimiter (custom delimiter)', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'a>b>',
 		'c>d',
 		'c>e>'
@@ -126,7 +126,7 @@ test('ignore trailing delimiter (custom delimiter)', t => {
 });
 
 test('ignore leading and trailing delimiter (custom delimiter)', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'>a>b>',
 		'>c>d',
 		'c>e>'
@@ -136,7 +136,7 @@ test('ignore leading and trailing delimiter (custom delimiter)', t => {
 });
 
 test('ignore consecutive delimiters', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'a//b',
 		'/c//d///',
 		'c////e'
@@ -146,7 +146,7 @@ test('ignore consecutive delimiters', t => {
 });
 
 test('ignore consecutive delimiters (custom delimiter)', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'a>>b',
 		'>c>>d>>>',
 		'>c>>>e>>'
@@ -156,7 +156,7 @@ test('ignore consecutive delimiters (custom delimiter)', t => {
 });
 
 test('use words', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'I am/not/a number',
 		'I am/a/free man!'
 	]);
@@ -165,7 +165,7 @@ test('use words', t => {
 });
 
 test('use words (custom delimiter)', t => {
-	const res = jsonifyPaths.fromStrings([
+	const res = jsonifyPaths.from([
 		'I am»not»a number',
 		'»I am»a»free man!'
 	], {delimiter: '»'});

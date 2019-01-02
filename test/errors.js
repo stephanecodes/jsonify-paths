@@ -1,31 +1,25 @@
 import test from 'ava';
 import jsonifyPaths from '..';
 
-test('throws for invalid string value', t => {
-	t.throws(() => {
-		jsonifyPaths.fromString();
-	}, 'I want a string!');
+test('throws for null or undefined argument', t => {
+	const err = 'I wan\'t something!';
 
 	t.throws(() => {
-		jsonifyPaths.fromString(null);
-	}, TypeError);
+		jsonifyPaths.from();
+	}, err);
 
 	t.throws(() => {
-		jsonifyPaths.fromString(undefined);
-	}, TypeError);
+		jsonifyPaths.from(null);
+	}, err);
+
+	t.throws(() => {
+		jsonifyPaths.from(undefined);
+	}, err);
 });
 
-test('throws for invalid string array', t => {
+test('throws for unsupported argument type', t => {
 	t.throws(() => {
-		jsonifyPaths.fromStrings();
-	}, 'I want an array of strings!');
-
-	t.throws(() => {
-		jsonifyPaths.fromStrings(null);
-	}, TypeError);
-
-	t.throws(() => {
-		jsonifyPaths.fromStrings(undefined);
-	}, TypeError);
+		jsonifyPaths.from(7353);
+	}, 'Unsupported argument type');
 });
 
