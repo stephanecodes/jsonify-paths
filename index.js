@@ -29,13 +29,10 @@ const populate = (data, options, jsonObject) => {
 		} else {
 			jsonObject[key] = populate(data, options);
 		}
+	} else if (/false/i.test(value) || value === '' || value) {
+		jsonObject[path] = value;
 	} else {
-		if(/false/i.test(value) || value === '' || value) {
-			jsonObject[path] = value;
-		}
-		else {
-			jsonObject[path] = 	options.defaultValue;
-		}
+		jsonObject[path] = 	options.defaultValue;
 	}
 
 	return jsonObject;
