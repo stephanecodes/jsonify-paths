@@ -1,6 +1,6 @@
 /*
 
-FromString('a/b/c/')
+fromString('a/b/c/')
 fromString('a/b/c')
 fromString('/a/b/c/')
 fromString('/a/b/c')
@@ -44,6 +44,12 @@ const defaults = {
 	}
 };
 
+// Escape special characters in a regular expression
+// https://stackoverflow.com/a/9310752/7557538
+const escapeRegExp = text => {
+	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
 const populate = (value, delimiter, jsonObject) => {
 	jsonObject = jsonObject || {};
 
@@ -73,9 +79,12 @@ const fromStrings = (strings, options) => {
 	const jsonObject = {};
 	const {delimiter} = options;
 
-	const consecutiveDelimitersRegExp = new RegExp(`${delimiter}+`, 'g');
-	const leadingAndTrailingDelimitersRegExp = new RegExp(`^${delimiter}|${delimiter}$`, 'g');
-	const spacesBeforeAndAfterDelimitersRegExp = new RegExp(` *(${delimiter}+) *`, 'g');
+	// Delimiter will be used in some regular expressions. Therefore it must be escaped
+	let escapedDelimiter = escapeRegExp(delimiter);
+
+	const consecutiveDelimitersRegExp = new RegExp(`${escapedDelimiter}+`, 'g');
+	const leadingAndTrailingDelimitersRegExp = new RegExp(`^${escapedDelimiter}|${escapedDelimiter}$`, 'g');
+	const spacesBeforeAndAfterDelimitersRegExp = new RegExp(` *(${escapedDelimiter}+) *`, 'g');
 
 	strings.forEach(string => {
 		if (string) {
@@ -91,6 +100,7 @@ const fromStrings = (strings, options) => {
 				.replace(consecutiveDelimitersRegExp, delimiter)
 				// Remove leading and trailing spaces
 				.replace(leadingAndTrailingDelimitersRegExp, '');
+
 			// Populate JSON object from path
 			populate(string, delimiter, jsonObject);
 		}
