@@ -125,6 +125,24 @@ test('ignore consecutive delimiters (custom delimiter)', t => {
 	t.deepEqual(res, twoLevelsResult);
 });
 
+test('consecutive, leading and trailing delimiters', t => {
+	const res = jsonifyPaths.fromString('/a // b  ///c/d ///');
+
+	t.deepEqual(res, multiLevelsResult);
+});
+
+test('ignore spaces around delimiters (custom delimiter)', t => {
+	const res = jsonifyPaths.fromString('Lyon ✈ Reykjavik ✈ Vienna', {delimiter: '✈'});
+
+	t.deepEqual(res, {
+		"Lyon": {
+			"Reykjavik": {
+				"Vienna": {}
+			}
+		}
+	});
+});
+
 test('use words', t => {
 	const res = jsonifyPaths.fromString('I am/not/a number');
 
