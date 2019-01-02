@@ -1,7 +1,8 @@
 
 const defaults = {
 	options: {
-		delimiter: '/'
+		delimiter: '/',
+		defaultValue: {}
 	}
 };
 
@@ -9,70 +10,89 @@ const defaults = {
 // https://stackoverflow.com/a/9310752/7557538
 const escapeRegExp = text => {
 	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-}
+};
 
-const populate = (string, options, jsonObject) => {
+const populate = (data, options, jsonObject) => {
 	jsonObject = jsonObject || {};
 
-	const i = string.indexOf(options.delimiter);
+	let {path} = data;
+	const {value} = data;
+
+	const i = path.indexOf(options.delimiter);
 	if (i > 0) {
-		const key = string.substring(0, i);
-		string = string.substring(i + options.delimiter.length);
+		const key = path.substring(0, i);
+		path = path.substring(i + options.delimiter.length);
+		// Don't alter original data
+		data = {path, value};
 		if (Object.prototype.hasOwnProperty.call(jsonObject, key)) {
-			populate(string, options, jsonObject[key]);
+			populate(data, options, jsonObject[key]);
 		} else {
-			jsonObject[key] = populate(string, options);
+			jsonObject[key] = populate(data, options);
 		}
 	} else {
-		jsonObject[string] = {};
+		if(/false/i.test(value) || value === '' || value) {
+			jsonObject[path] = value;
+		}
+		else {
+			jsonObject[path] = 	options.defaultValue;
+		}
 	}
 
 	return jsonObject;
 };
 
-const fromStrings = (strings, options) => {
-	if (Array.isArray(strings) === false) {
-		throw new TypeError('I want an array of strings!');
+const from = (arg, options) => {
+	const jsonObject = {};
+
+	if (arg === undefined || arg === null) {
+		throw new TypeError('I wan\'t something!');
 	}
+	if (typeof (arg) === 'string') {
+		return from([{path: arg}], options);
+	}
+	if (Array.isArray(arg) === false) {
+		if (typeof (arg) === 'object') {
+			return from([arg], options);
+		}
+		throw new TypeError('Unsupported argument type');
+	}
+
 	options = Object.assign({}, defaults.options, options);
 
-	const jsonObject = {};
 	const {delimiter} = options;
 
 	// Delimiter will be used in some regular expressions. Therefore it must be escaped
-	let escapedDelimiter = escapeRegExp(delimiter);
+	const escapedDelimiter = escapeRegExp(delimiter);
 
 	const consecutiveDelimitersRegExp = new RegExp(`${escapedDelimiter}+`, 'g');
 	const leadingAndTrailingDelimitersRegExp = new RegExp(`^${escapedDelimiter}|${escapedDelimiter}$`, 'g');
 	const spacesBeforeAndAfterDelimitersRegExp = new RegExp(` *(${escapedDelimiter}+) *`, 'g');
 
-	strings.forEach(string => {
-		if (string) {
-			string = string
-				// Trim string
-				.trim()
-				// Remove spaces before and after delimiters
-				// => `a / b  /c  ` becomes `a/b/c`
-				.replace(spacesBeforeAndAfterDelimitersRegExp, delimiter)
-				// ignore consecutive delimiters,
-				// => `///` or `//` becomes `/`
-				.replace(consecutiveDelimitersRegExp, delimiter)
-				// Remove leading and trailing spaces
-				.replace(leadingAndTrailingDelimitersRegExp, '');
+	arg.forEach(data => {
+		if (data) {
+			if (typeof (data) === 'string') {
+				data = {path: data};
+			}
+			if (data.path) {
+				data.path = data.path
+					// Trim string
+					.trim()
+					// Remove spaces before and after delimiters
+					// => `a / b  /c  ` becomes `a/b/c`
+					.replace(spacesBeforeAndAfterDelimitersRegExp, delimiter)
+					// ignore consecutive delimiters,
+					// => `///` or `//` becomes `/`
+					.replace(consecutiveDelimitersRegExp, delimiter)
+					// Remove leading and trailing spaces
+					.replace(leadingAndTrailingDelimitersRegExp, '');
 
-			// Populate JSON object from path
-			populate(string, options, jsonObject);
+				// Populate JSON object from path
+				populate(data, options, jsonObject);
+			}
 		}
 	});
 
 	return jsonObject;
 };
 
-const fromString = (string, options) => {
-	if (typeof string !== 'string') {
-		throw new TypeError('I want a string!');
-	}
-	return fromStrings([string], options);
-};
-
-module.exports = {defaults, fromString, fromStrings};
+module.exports = {defaults, from};
