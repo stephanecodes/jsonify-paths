@@ -2,6 +2,12 @@
 
 Convert strings representing paths or objects with a path and optional value to a JSON object.
 
+## Install
+
+```
+$ npm install jsonify-paths
+```
+
 ## Usage
 
 ```js
