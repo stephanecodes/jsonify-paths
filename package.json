@@ -4,12 +4,18 @@
   "description": "Convert strings representing paths or objects with a path and optional value to a JSON object.",
   "main": "index.js",
   "scripts": {
-    "test": "xo --fix && ava --verbose"
+    "test": "xo && ava --verbose"
   },
   "author": "Stephane Janicaud (https://stephanecodes.github.io)",
   "license": "MIT",
   "devDependencies": {
     "ava": "^1.0.1",
     "xo": "^0.23.0"
-  }
+	},
+	"keywords": [
+		"delimited",
+		"strings",
+		"paths",
+		"json"
+	]
 }
