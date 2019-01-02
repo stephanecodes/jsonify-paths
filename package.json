@@ -11,11 +11,11 @@
   "devDependencies": {
     "ava": "^1.0.1",
     "xo": "^0.23.0"
-	},
-	"keywords": [
-		"delimited",
-		"strings",
-		"paths",
-		"json"
-	]
+  },
+  "keywords": [
+    "delimited",
+    "strings",
+    "paths",
+    "json"
+  ]
 }
