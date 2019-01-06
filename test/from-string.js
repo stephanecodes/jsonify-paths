@@ -131,6 +131,30 @@ test('consecutive, leading and trailing delimiters', t => {
 	t.deepEqual(res, multiLevelsResult);
 });
 
+test('ignore spaces around delimiters', t => {
+	const res = jsonifyPaths.from('a / b  /   c');
+
+	t.deepEqual(res, {
+		a: {
+			b: {
+				c: {}
+			}
+		}
+	});
+});
+
+test('do not ignore spaces around delimiters', t => {
+	const res = jsonifyPaths.from('I / am not a / number', {ignoreSpacesAroundDelimiters: false});
+
+	t.deepEqual(res, {
+		'I ': {
+			' am not a ': {
+				' number': {}
+			}
+		}
+	});
+});
+
 test('ignore spaces around delimiters (custom delimiter)', t => {
 	const res = jsonifyPaths.from('Lyon ✈ Reykjavik ✈ Vienna', {delimiter: '✈'});
 
