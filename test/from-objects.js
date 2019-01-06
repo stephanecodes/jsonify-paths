@@ -55,7 +55,7 @@ test('mix strings and objects', t => {
 				Rome: 'Scheduled', // => default value
 				Geneva: 'On Time'
 			},
-			Paris: 'Scheduled', // => default value
+			Paris: 'Scheduled' // => default value
 		},
 		Bangkok: {
 			Tokyo: 'Delayed'
