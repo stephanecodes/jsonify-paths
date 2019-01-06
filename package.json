@@ -3,15 +3,15 @@
   "version": "1.0.1",
   "description": "Convert strings representing paths or objects with a path and optional value to a JSON object.",
   "license": "MIT",
-	"repository": "stephanecodes/jsonify-paths",
-	"author": {
-		"name": "Stephane Janicaud",
-		"url": "https://stephanecodes.github.io/"
-	},
-	"engines": {
-		"node": ">=6"
-	},
-	"main": "index.js",
+  "repository": "stephanecodes/jsonify-paths",
+  "author": {
+    "name": "Stephane Janicaud",
+    "url": "https://stephanecodes.github.io/"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "main": "index.js",
   "scripts": {
     "test": "xo && nyc ava"
   },
