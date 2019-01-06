@@ -75,7 +75,7 @@ const from = (arg, options) => {
 				// Trim string
 				data.path = data.path.trim();
 
-				if(options.ignoreSpacesAroundDelimiters === true) {
+				if (options.ignoreSpacesAroundDelimiters === true) {
 					// Remove spaces before and after delimiters
 					// => `a / b  /c  ` becomes `a/b/c`
 					data.path = data.path.replace(spacesAroundDelimitersRegExp, delimiter);
