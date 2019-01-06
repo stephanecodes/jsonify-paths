@@ -2,6 +2,7 @@
 const defaults = {
 	options: {
 		delimiter: '/',
+		ignoreSpacesAroundDelimiters: true,
 		defaultValue: {}
 	}
 };
@@ -63,7 +64,7 @@ const from = (arg, options) => {
 
 	const consecutiveDelimitersRegExp = new RegExp(`${escapedDelimiter}+`, 'g');
 	const leadingAndTrailingDelimitersRegExp = new RegExp(`^${escapedDelimiter}|${escapedDelimiter}$`, 'g');
-	const spacesBeforeAndAfterDelimitersRegExp = new RegExp(` *(${escapedDelimiter}+) *`, 'g');
+	const spacesAroundDelimitersRegExp = new RegExp(` *(${escapedDelimiter}+) *`, 'g');
 
 	arg.forEach(data => {
 		if (data) {
@@ -71,12 +72,16 @@ const from = (arg, options) => {
 				data = {path: data};
 			}
 			if (data.path) {
-				data.path = data.path
-					// Trim string
-					.trim()
+				// Trim string
+				data.path = data.path.trim();
+
+				if(options.ignoreSpacesAroundDelimiters === true) {
 					// Remove spaces before and after delimiters
 					// => `a / b  /c  ` becomes `a/b/c`
-					.replace(spacesBeforeAndAfterDelimitersRegExp, delimiter)
+					data.path = data.path.replace(spacesAroundDelimitersRegExp, delimiter);
+				}
+
+				data.path = data.path
 					// ignore consecutive delimiters,
 					// => `///` or `//` becomes `/`
 					.replace(consecutiveDelimitersRegExp, delimiter)
