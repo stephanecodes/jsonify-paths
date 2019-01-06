@@ -202,3 +202,28 @@ jsonifyPaths.from([
 };
 ```
 
+### Mix objects and strings
+
+```js
+const res = jsonifyPaths.from([
+	{path: 'Lyon ✈ Berlin ✈ Rome'},
+	'Lyon ✈ Paris',
+	'Bangkok ✈ Tokyo',
+	{path: 'Lyon ✈ Berlin ✈ Geneva', value: 'On Time'},
+], {delimiter: '✈', defaultValue: 'Scheduled'});
+
+// =>
+{
+  "Lyon": {
+    "Berlin": {
+      "Rome": "Scheduled",
+      "Geneva": "On Time"
+    },
+    "Paris": "Scheduled"
+  },
+  "Bangkok": {
+    "Tokyo": "Scheduled"
+  }
+}
+```
+

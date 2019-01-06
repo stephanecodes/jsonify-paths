@@ -41,3 +41,25 @@ test('change default value', t => {
 	});
 });
 
+test('mix strings and objects', t => {
+	const res = jsonifyPaths.from([
+		{path: 'Lyon ✈ Berlin ✈ Rome'},
+		'Lyon ✈ Paris',
+		{path: 'Lyon ✈ Berlin ✈ Geneva', value: 'On Time'},
+		{path: 'Bangkok ✈ Tokyo', value: 'Delayed'}
+	], {delimiter: '✈', defaultValue: 'Scheduled'});
+
+	t.deepEqual(res, {
+		Lyon: {
+			Berlin: {
+				Rome: 'Scheduled', // => default value
+				Geneva: 'On Time'
+			},
+			Paris: 'Scheduled', // => default value
+		},
+		Bangkok: {
+			Tokyo: 'Delayed'
+		}
+	});
+});
+
