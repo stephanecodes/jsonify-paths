@@ -1,4 +1,4 @@
-# jsonify-paths [![Build Status](https://travis-ci.org/stephanecodes/jsonify-paths.svg?branch=master)](https://travis-ci.org/stephanecodes/jsonify-paths)
+# jsonify-paths [![Build Status](https://travis-ci.org/stephanecodes/jsonify-paths.svg?branch=master)](https://travis-ci.org/stephanecodes/jsonify-paths) [![Coverage Status](https://coveralls.io/repos/github/stephanecodes/jsonify-paths/badge.svg?branch=master)](https://coveralls.io/github/stephanecodes/jsonify-paths?branch=master)
 
 Convert strings representing paths or objects with a path and optional value to a JSON object.
 
@@ -166,7 +166,7 @@ jsonifyPaths.from({path: 'Lyon ✈ Reykjavik ✈ Vienna', value:"On Time"}, {del
 }
 ```
 
-With `ignoreSpacesAroundDelimiters` is **false**
+Forcing option to `false`
 
 ```js
 jsonifyPaths.from('I / am not a / number', {ignoreSpacesAroundDelimiters: false});
