@@ -166,7 +166,22 @@ jsonifyPaths.from({path: 'Lyon ✈ Reykjavik ✈ Vienna', value:"On Time"}, {del
 }
 ```
 
+With `ignoreSpacesAroundDelimiters` is **false**
+
+```js
+jsonifyPaths.from('I / am not a / number', {ignoreSpacesAroundDelimiters: false});
+// =>
+'I ': {
+	' am not a ': {
+		' number': {}
+	}
+}
+```
+
 ### Change default value (default: `{}`)
+
+Default value is used when value is not set for an object
+
 ```js
 jsonifyPaths.from([
 	{path: 'Lyon ✈ Berlin ✈ Rome'},
